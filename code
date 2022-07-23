@@ -1,0 +1,170 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+class test {
+    public static String[][] board = new String[3][3];
+    public static boolean xWins = false;
+    public static boolean oWins = false;
+    public static boolean finished = false;
+    public static int countX,countO;
+    public static int countsp = 9;
+    public static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        createBoard(board);
+        do {
+            printBoard();
+            enterCoordinates();
+            determineWinner();
+        }while (!finished);
+
+    }
+    public static void enterCoordinates() {
+        int x,y;
+
+        do {
+
+            //System.out.print("Enter the coordinates: ");
+
+            String[] str = sc.nextLine().trim().split("\\s+");
+
+            try {
+                 x = Integer.parseInt(str[0]);
+                 y = Integer.parseInt(str[1]);
+
+
+            } catch (Exception e) {
+                System.out.println("You should enter numbers!");
+                continue;
+            }
+
+            if (x > 3 || y > 3) {
+                System.out.println("Coordinates should be from 1 to 3!");
+                continue;
+
+            } else if (board[x - 1][y - 1].equals("O") || board[x - 1][y - 1].equals("X")) {
+                System.out.println("This cell is occupied! Choose another one!");
+                continue;
+            }
+            else{
+                if(countX > (countO)){
+                    board[x -1][y -1] = "O";
+                    countO++;
+                    countsp--;
+                }
+                else{
+                    board[x -1][y -1] = "X";
+                    countX++;
+                    countsp--;
+                }
+                break;
+            }
+
+        }while (true);
+    }
+    private static void printBoard() {
+        System.out.println("---------");
+        for (int i = 0; i < board.length; i++)  {
+            System.out.print("| ");
+            for (int j = 0; j < board[i].length; j++) {
+                System.out.print(board[i][j] + " ");
+
+            }
+            System.out.print("|");
+            System.out.println();
+        }
+        System.out.println("---------");
+    }
+
+    private static void createBoard(String[][] board) {
+        //String cells = sc.nextLine();
+        //int k = 0;
+        for (int i = 0; i < board.length; i++) {
+            Arrays.fill(board[i], " ");
+
+        }
+    }
+
+    public static void determineWinner() {
+
+
+        columnCheck();
+        rowCheck();
+        diagonalCheck();
+
+        if((xWins & oWins) || (countX - countO) > 1 || (countO - countX) > 1)
+        {printBoard();
+            System.out.println("Impossible");}
+        else if (xWins) {
+            printBoard();
+            System.out.println("X wins");
+        } else if (oWins) {
+            printBoard();
+            System.out.println("O wins");
+        } else if (countsp == 0) {
+            printBoard();
+            System.out.println("Draw");
+            finished = true;
+        }
+        else
+            return;
+
+    }
+
+    private static void rowCheck() {
+        for (int i = 0; i < board.length; i++) {
+            if ((board[i][0].equals(board[i][1])) & board[i][0].equals(board[i][2])) {
+                if (board[i][0].equals("X")){
+                    xWins = true;
+                     finished = true;}
+                else if (board[i][0].equals("O")) {
+                    oWins = true;
+                    finished = true;
+                } else
+                    return;
+            }
+        }
+
+    }
+    private static void columnCheck() {
+        for (int i = 0; i < board.length; i++) {
+            if ((board[0][i].equals(board[1][i])) & board[0][i].equals(board[2][i])) {
+                if (board[0][i].equals("X")){
+                    xWins = true;
+                    finished = true;}
+                else if (board[0][i].equals("O")) {
+                    oWins = true;
+                    finished = true;
+                } else
+                    return;
+
+            }
+        }
+
+
+    }
+    private static void diagonalCheck(){
+        if ((board[0][0].equals(board[1][1])) & board[0][0].equals(board[2][2])) {
+            if (board[0][0].equals("X")){
+                xWins = true;
+                finished = true;}
+            else if (board[0][0].equals("O")) {
+                oWins = true;
+                finished = true;
+            } else
+                return;
+        }
+
+        if ((board[0][2].equals(board[1][1])) & board[1][1].equals(board[2][0])) {
+            if (board[0][2].equals("X")){
+                xWins = true;
+                finished = true;}
+            else if (board[0][2].equals("O")) {
+                oWins = true;
+                finished = true;
+            } else
+                return;
+        }
+    }
+}
+ 
